@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Community — Aura Care</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="resources.html">📚 Resources</a>
+    <a href="community.html" class="active">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>Sisterhood Community 👭</h1>
+      <p class="muted">Anonymous · Moderated · Safe for every woman</p>
+    </div>
+    <div class="anon-badge">🕶️ You're Anon_Lotus</div>
+  </header>
+
+  <section class="post-box">
+    <textarea id="postText" placeholder="Share what's on your heart — no names, no judgment."></textarea>
+    <div class="post-actions">
+      <select id="postTag">
+        <option>#selflove</option>
+        <option>#anxiety</option>
+        <option>#motherhood</option>
+        <option>#worklife</option>
+        <option>#hormones</option>
+        <option>#relationships</option>
+        <option>#healing</option>
+      </select>
+      <button class="btn-primary" onclick="addPost()">Share</button>
+    </div>
+  </section>
+
+  <div id="feed" class="feed">
+    <div class="post">
+      <div class="post-head"><strong>Anon_Rose</strong> <span class="tag">#motherhood</span> <span class="muted">2h ago</span></div>
+      <p>New mom here. Some days I love my baby fiercely and cry in the bathroom the next hour. Is this normal? 💜</p>
+      <div class="post-actions-row">
+        <button>💜 47</button><button>💬 15 replies</button>
+      </div>
+    </div>
+    <div class="post">
+      <div class="post-head"><strong>Anon_Jasmine</strong> <span class="tag">#worklife</span> <span class="muted">5h ago</span></div>
+      <p>Said "no" to overtime today without apologizing. Small step, huge win. Setting boundaries feels weird but powerful 🌱</p>
+      <div class="post-actions-row">
+        <button>💜 132</button><button>💬 21 replies</button>
+      </div>
+    </div>
+    <div class="post">
+      <div class="post-head"><strong>Anon_Lily</strong> <span class="tag">#hormones</span> <span class="muted">1d ago</span></div>
+      <p>Perimenopause is real, ladies. The mood swings caught me off guard. This app's breathing exercise actually helped today 🙏</p>
+      <div class="post-actions-row">
+        <button>💜 218</button><button>💬 34 replies</button>
+      </div>
+    </div>
+    <div class="post">
+      <div class="post-head"><strong>Anon_Iris</strong> <span class="tag">#selflove</span> <span class="muted">2d ago</span></div>
+      <p>16 and finally learning that my worth isn't in a mirror or a number. Thank you to the older sisters here 💗</p>
+      <div class="post-actions-row">
+        <button>💜 340</button><button>💬 52 replies</button>
+      </div>
+    </div>
+  </div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>

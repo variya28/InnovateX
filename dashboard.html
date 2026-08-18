@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Dashboard — Aura Care</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html" class="active">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="resources.html">📚 Resources</a>
+    <a href="community.html">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+  <div class="sos"><a href="#" onclick="showSOS()">🚨 Crisis Help</a></div>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>Hi, Sister 💜</h1>
+      <p class="muted">How are you feeling today?</p>
+    </div>
+    <div class="streak-badge">🔥 <span id="streak">7</span>-day streak</div>
+  </header>
+
+  <section class="mood-log">
+    <h2>Log your mood</h2>
+    <div class="mood-picker">
+      <button data-mood="😄" data-label="Great">😄</button>
+      <button data-mood="🙂" data-label="Good">🙂</button>
+      <button data-mood="😐" data-label="Okay">😐</button>
+      <button data-mood="😔" data-label="Low">😔</button>
+      <button data-mood="😢" data-label="Sad">😢</button>
+      <button data-mood="😡" data-label="Angry">😡</button>
+    </div>
+    <textarea id="moodNote" placeholder="Anything on your mind? (optional)"></textarea>
+    <button class="btn-primary" onclick="saveMood()">Save Entry</button>
+  </section>
+
+  <div class="grid-2">
+    <section class="panel">
+      <h2>This Week</h2>
+      <div class="chart" id="chart"></div>
+      <p class="muted">Your average mood: <strong id="avgMood">🙂 Good</strong></p>
+    </section>
+
+    <section class="panel">
+      <h2>Recommended for You</h2>
+      <ul class="rec-list">
+        <li><a href="resources.html">🧘 5-min Breathing exercise</a></li>
+        <li><a href="resources.html">📝 Self-love journal prompt</a></li>
+        <li><a href="resources.html">🎵 Calm music for restful sleep</a></li>
+        <li><a href="chat.html">💬 Talk to Aura AI</a></li>
+      </ul>
+      <a href="resources.html" class="btn-ghost">Explore all →</a>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Recent Entries</h2>
+    <ul id="history" class="history"></ul>
+  </section>
+</main>
+
+<div id="sosModal" class="modal hidden">
+  <div class="modal-body">
+    <h2>🚨 You're not alone</h2>
+    <p>If you're in crisis or feel unsafe, please reach out immediately:</p>
+    <ul>
+      <li><strong>Women Helpline (National):</strong> 181</li>
+      <li><strong>Domestic Abuse Helpline:</strong> 1091</li>
+      <li><strong>iCall (Mental Health):</strong> 9152987821</li>
+      <li><strong>Vandrevala Foundation:</strong> 1860-2662-345</li>
+      <li><strong>AASRA (Suicide Prevention):</strong> 9820466726</li>
+    </ul>
+    <button class="btn-primary" onclick="hideSOS()">Close</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Resources — Aura Care</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="resources.html" class="active">📚 Resources</a>
+    <a href="community.html">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>Wellness Resources 📚</h1>
+      <p class="muted">Care tools designed for every woman, at every stage of life.</p>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-cat="all">All</button>
+    <button class="tab" data-cat="breathe">Breathing</button>
+    <button class="tab" data-cat="meditate">Meditation</button>
+    <button class="tab" data-cat="journal">Journaling</button>
+    <button class="tab" data-cat="learn">Learn</button>
+  </div>
+
+  <div class="resource-grid" id="resGrid">
+    <div class="res-card" data-cat="breathe">
+      <div class="thumb">🌬️</div>
+      <h3>4-7-8 Breathing</h3>
+      <p>Calms your nervous system — perfect for stress, PMS, or panic moments.</p>
+      <button class="btn-primary" onclick="startBreathe()">Start</button>
+    </div>
+    <div class="res-card" data-cat="meditate">
+      <div class="thumb">🧘</div>
+      <h3>Body Scan Meditation</h3>
+      <p>10-min guided relaxation to reconnect with your body with kindness.</p>
+      <button class="btn-primary" onclick="startMeditation()">Play</button>
+    </div>
+    <div class="res-card" data-cat="journal">
+      <div class="thumb">📔</div>
+      <h3>Self-Love Journal</h3>
+      <p>Celebrate 3 things you love about yourself today.</p>
+      <button class="btn-primary" onclick="openJournal()">Open</button>
+    </div>
+    <div class="res-card" data-cat="learn">
+      <div class="thumb">🎓</div>
+      <h3>Women & Anxiety</h3>
+      <p>How hormones, roles, and expectations shape anxiety — and how to cope.</p>
+      <button class="btn-primary" onclick="openArticle()">Read</button>
+    </div>
+    <div class="res-card" data-cat="meditate">
+      <div class="thumb">🎵</div>
+      <h3>Calm Sounds</h3>
+      <p>Rain, forest & ocean audio for restful sleep and focus.</p>
+      <button class="btn-primary" onclick="openSounds()">Listen</button>
+    </div>
+    <div class="res-card" data-cat="journal">
+      <div class="thumb">✍️</div>
+      <h3>Thought Reframing</h3>
+      <p>CBT-based prompt to challenge guilt, self-doubt & inner critic.</p>
+      <button class="btn-primary" onclick="openReframe()">Try</button>
+    </div>
+  </div>
+
+  <!-- Breathing modal (existing) -->
+  <div id="breatheModal" class="modal hidden">
+    <div class="modal-body breathe-modal">
+      <h2 id="breatheText">Breathe In</h2>
+      <div class="breathe-circle"></div>
+      <button class="btn-ghost" onclick="stopBreathe()">Done</button>
+    </div>
+  </div>
+
+  <!-- Universal modal -->
+  <div id="resModal" class="modal hidden">
+    <div class="modal-body" id="resModalBody" style="max-width:560px;text-align:left"></div>
+  </div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
