@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Life Stages — Aura Care</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+/* Stage selector */
+.stage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.stage-card{background:var(--card);border:2px solid transparent;border-radius:16px;padding:1.4rem 1rem;text-align:center;cursor:pointer;transition:all .2s}
+.stage-card:hover{border-color:rgba(167,139,250,.4);transform:translateY(-3px)}
+.stage-card.active{border-color:var(--pri);background:rgba(167,139,250,.1)}
+.stage-card .stage-icon{font-size:2.4rem;margin-bottom:.5rem}
+.stage-card h3{font-size:.95rem;margin-bottom:.2rem}
+.stage-card p{font-size:.78rem;color:var(--muted)}
+/* Stage content */
+.stage-content{display:none}
+.stage-content.visible{display:block}
+/* PCOS quiz */
+.quiz-q{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
+.quiz-q h3{font-size:1rem;margin-bottom:.8rem;font-weight:600}
+.quiz-opts{display:flex;gap:.6rem;flex-wrap:wrap}
+.quiz-opt{background:var(--card2);border:2px solid transparent;color:var(--text);padding:.6rem 1.1rem;border-radius:10px;cursor:pointer;font-size:.9rem;transition:all .2s}
+.quiz-opt:hover{border-color:rgba(167,139,250,.4)}
+.quiz-opt.selected{border-color:var(--pri);background:rgba(167,139,250,.15)}
+.result-low{background:linear-gradient(135deg,rgba(94,234,212,.15),rgba(94,234,212,.05));border:1px solid rgba(94,234,212,.3);border-radius:14px;padding:1.5rem}
+.result-mod{background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.05));border:1px solid rgba(167,139,250,.3);border-radius:14px;padding:1.5rem}
+.result-high{background:linear-gradient(135deg,rgba(255,107,138,.15),rgba(255,107,138,.05));border:1px solid rgba(255,107,138,.3);border-radius:14px;padding:1.5rem}
+/* Skin/Hair progress */
+.progress-entry{background:var(--card2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem}
+.progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.progress-rating{display:flex;gap:.3rem}
+.rating-dot{width:12px;height:12px;border-radius:50%;background:var(--card);border:1.5px solid rgba(167,139,250,.3);cursor:pointer;transition:all .2s}
+.rating-dot.filled{background:var(--pri);border-color:var(--pri)}
+/* Pregnancy week */
+.week-card{background:var(--card2);border-radius:12px;padding:1rem;margin-bottom:.7rem;border-left:3px solid var(--pri)}
+.tag-badge{display:inline-block;background:rgba(240,171,252,.15);color:var(--pink);border-radius:10px;padding:.2rem .7rem;font-size:.78rem;font-weight:600;margin-left:.5rem}
+</style>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="cycle.html">🌙 Cycle &amp; Symptoms</a>
+    <a href="health.html">💊 Health Hub</a>
+    <a href="lifestage.html" class="active">🌸 Life Stages</a>
+    <a href="resources.html">📚 Resources</a>
+    <a href="community.html">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+  <div class="sos"><a href="#" onclick="showSOS()">🚨 Crisis Help</a></div>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>🌸 Life Stages</h1>
+      <p class="muted">Age-appropriate care · PCOS assessment · Skin &amp; Hair · Pregnancy · Menopause · Teen</p>
+    </div>
+  </header>
+
+  <!-- Stage Selector -->
+  <div class="stage-grid">
+    <div class="stage-card" data-stage="teen" onclick="setStage('teen')">
+      <div class="stage-icon">🌸</div>
+      <h3>Teen &amp; First Period</h3>
+      <p>Age-appropriate education with stronger privacy</p>
+    </div>
+    <div class="stage-card" data-stage="pcos" onclick="setStage('pcos')">
+      <div class="stage-icon">🔍</div>
+      <h3>PCOS Risk Assessment</h3>
+      <p>Lower / moderate / higher indication — not a diagnosis</p>
+    </div>
+    <div class="stage-card" data-stage="pregnancy" onclick="setStage('pregnancy')">
+      <div class="stage-icon">🤰</div>
+      <h3>Pregnancy Mode</h3>
+      <p>Week-by-week companion, symptoms &amp; appointments</p>
+    </div>
+    <div class="stage-card" data-stage="menopause" onclick="setStage('menopause')">
+      <div class="stage-icon">🌙</div>
+      <h3>Menopause Mode</h3>
+      <p>Hot flashes, sleep, mood &amp; cycle changes</p>
+    </div>
+    <div class="stage-card" data-stage="skin" onclick="setStage('skin')">
+      <div class="stage-icon">✨</div>
+      <h3>Skin &amp; Hair Progress</h3>
+      <p>Photo timeline; progress comparison, not diagnosis</p>
+    </div>
+  </div>
+
+  <!-- ═══ Feature 16: Teen / First Period Mode ═══ -->
+  <div class="stage-content" id="stage-teen">
+    <section class="panel">
+      <h2>🌸 Teen &amp; First Period — Your Body, Your Power</h2>
+      <p class="muted" style="margin-bottom:1.5rem">Everything here is private to your device. No names, no judgment, just facts and support.</p>
+      <div class="grid-2">
+        <div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--pink);margin-bottom:.7rem">🩸 What is a Period?</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">A period (menstruation) is when the uterus sheds its lining. It usually lasts 3–7 days and comes once a month. It's completely normal — every woman has one.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--acc);margin-bottom:.7rem">📆 Will it be regular?</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">In the first 1–2 years, periods are often irregular — that's normal! Stress, weight changes, and illness can also shift dates. Use the Cycle Tracker to log yours.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem">
+            <h3 style="color:var(--pri);margin-bottom:.7rem">🛡️ Privacy First</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">All your data stays on this device only. No cloud, no sharing. You control everything.</p>
+          </div>
+        </div>
+        <div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--pink);margin-bottom:.7rem">😟 Is it supposed to hurt?</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Mild cramps are normal. Severe pain that stops you from daily activities is not — talk to a trusted adult or doctor. You deserve to be pain-free.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--acc);margin-bottom:.7rem">🧴 Products 101</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Pads, tampons, menstrual cups, and period underwear all work. There's no "right" choice — use whatever feels comfortable for you.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem">
+            <h3 style="color:var(--pri);margin-bottom:.7rem">💬 Need to talk?</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Aura AI is available 24/7 and completely anonymous. <a href="chat.html" style="color:var(--pri)">Start a conversation →</a></p>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(240,171,252,.08);border:1px solid rgba(240,171,252,.2);border-radius:14px;padding:1.3rem;margin-top:1rem">
+        <strong>🌟 Remember</strong>
+        <p class="muted" style="margin-top:.4rem;line-height:1.6">Your period does not define you. It's one small part of who you are. You are powerful, worthy, and capable — at every phase of your cycle.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ Feature 04: PCOS Risk Assessment ═══ -->
+  <div class="stage-content" id="stage-pcos">
+    <section class="panel">
+      <h2>🔍 PCOS Risk Assessment</h2>
+      <p class="muted" style="margin-bottom:.3rem">This quiz provides a <strong>lower / moderate / higher risk indication only</strong> — it is not a medical diagnosis.</p>
+      <p class="muted" style="margin-bottom:1.5rem;font-size:.85rem">Polycystic Ovary Syndrome (PCOS) is a common hormonal condition affecting 1 in 10 women. Only a gynaecologist can confirm a diagnosis via ultrasound and blood tests.</p>
+      <div id="pcosQuiz"></div>
+      <div id="pcosResult" style="margin-top:1.5rem"></div>
+      <div style="margin-top:1rem;display:flex;gap:.8rem;flex-wrap:wrap">
+        <button class="btn-primary" onclick="calcPCOS()">📊 Calculate Risk</button>
+        <button class="btn-ghost" onclick="resetPCOS()">🔄 Reset Quiz</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ Feature 06: Pregnancy Mode ═══ -->
+  <div class="stage-content" id="stage-pregnancy">
+    <section class="panel">
+      <h2>🤰 Pregnancy Mode — Week-by-Week Companion</h2>
+      <p class="muted" style="margin-bottom:1rem">Enter your last menstrual period (LMP) date to calculate your current week and get guidance.</p>
+      <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem">
+        <label style="font-weight:600">LMP Date:</label>
+        <input type="date" id="lmpDate" style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-size:1rem"/>
+        <button class="btn-primary" onclick="calcPregnancyWeek()">Calculate Week</button>
+      </div>
+      <div id="pregnancyResult"></div>
+      <div style="margin-top:1.5rem">
+        <h3 style="margin-bottom:1rem">📅 Log Appointment</h3>
+        <div style="display:flex;gap:.8rem;flex-wrap:wrap">
+          <input type="text" id="apptName" placeholder="Appointment (e.g. Anatomy Scan)"
+            style="flex:1;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;min-width:180px"/>
+          <input type="date" id="apptDate"
+            style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px"/>
+          <button class="btn-primary" onclick="addAppointment()">➕ Add</button>
+        </div>
+        <div id="apptList" style="margin-top:1rem"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ Feature 15: Menopause Mode ═══ -->
+  <div class="stage-content" id="stage-menopause">
+    <section class="panel">
+      <h2>🌙 Menopause Mode</h2>
+      <p class="muted" style="margin-bottom:1.5rem">Supporting you through perimenopause and menopause — hot flashes, sleep changes, mood, and beyond.</p>
+      <div class="grid-2">
+        <div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--pri);margin-bottom:.7rem">🌡️ Hot Flashes</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Sudden warmth spreading from chest to face is a vasomotor symptom. <strong>What helps:</strong> cool water, layered clothing, paced breathing (slow exhale). Tracking triggers (spicy food, caffeine, stress) helps predict them.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--acc);margin-bottom:.7rem">😴 Sleep Changes</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Night sweats and insomnia are common. Keep your room cool (18–20°C), avoid screens 1 hour before bed, and try magnesium-rich foods. Log sleep quality to share with your doctor.</p>
+          </div>
+        </div>
+        <div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--pink);margin-bottom:.7rem">😔 Mood &amp; Brain Fog</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Estrogen withdrawal affects serotonin. Mood swings, irritability, and forgetfulness are real and valid. <a href="chat.html" style="color:var(--pri)">Talk to Aura AI →</a> or use the breathing exercises in Resources.</p>
+          </div>
+          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:var(--pri);margin-bottom:.7rem">🩸 Cycle Changes</h3>
+            <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Perimenopause can cause very irregular periods — more frequent, less frequent, or heavier. Keep logging your cycle. Any bleeding 12+ months after your last period should be discussed with your doctor.</p>
+          </div>
+        </div>
+      </div>
+      <h3 style="margin:1rem 0 .8rem">📊 Track Today's Symptoms</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem">
+        <button class="symptom-btn" data-msym="hot-flash" onclick="toggleMenSym(this)">🌡️ Hot Flash</button>
+        <button class="symptom-btn" data-msym="night-sweats" onclick="toggleMenSym(this)">💧 Night Sweats</button>
+        <button class="symptom-btn" data-msym="mood-swing" onclick="toggleMenSym(this)">🌊 Mood Swing</button>
+        <button class="symptom-btn" data-msym="brain-fog" onclick="toggleMenSym(this)">🌫️ Brain Fog</button>
+        <button class="symptom-btn" data-msym="insomnia" onclick="toggleMenSym(this)">🌙 Insomnia</button>
+        <button class="symptom-btn" data-msym="joint-pain" onclick="toggleMenSym(this)">💪 Joint Pain</button>
+        <button class="symptom-btn" data-msym="low-libido" onclick="toggleMenSym(this)">💔 Low Libido</button>
+        <button class="symptom-btn" data-msym="anxiety" onclick="toggleMenSym(this)">😰 Anxiety</button>
+      </div>
+      <button class="btn-primary" onclick="saveMenopauseLog()">💾 Save Today's Log</button>
+      <div id="menopauseHistory" style="margin-top:1rem"></div>
+    </section>
+  </div>
+
+  <!-- ═══ Feature 14: Skin & Hair Progress ═══ -->
+  <div class="stage-content" id="stage-skin">
+    <section class="panel">
+      <h2>✨ Skin &amp; Hair Progress Tracker</h2>
+      <p class="muted" style="margin-bottom:.3rem">A timeline for tracking progress and changes — for comparison purposes, not diagnosis.</p>
+      <p class="muted" style="margin-bottom:1.5rem;font-size:.85rem">Note any changes in skin or hair condition over time. Consult a dermatologist for persistent concerns.</p>
+      <div class="grid-2">
+        <div>
+          <h3 style="margin-bottom:.8rem">📸 Add Progress Entry</h3>
+          <select id="skinCategory" style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit">
+            <option value="skin">🧴 Skin</option>
+            <option value="hair">💇 Hair</option>
+            <option value="nails">💅 Nails</option>
+          </select>
+          <textarea id="skinNote" placeholder="Describe the change, treatment used, or what you noticed today..."
+            style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:90px;font-family:inherit;margin-bottom:.8rem"></textarea>
+          <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:.4rem">Rate today's condition:</label>
+          <div class="progress-rating" id="skinRating" style="margin-bottom:1rem">
+            <button class="rating-dot" data-r="1" onclick="setRating(1)" title="Very poor">😞</button>
+            <button class="rating-dot" data-r="2" onclick="setRating(2)" title="Poor">😔</button>
+            <button class="rating-dot" data-r="3" onclick="setRating(3)" title="Okay">😐</button>
+            <button class="rating-dot" data-r="4" onclick="setRating(4)" title="Good">🙂</button>
+            <button class="rating-dot" data-r="5" onclick="setRating(5)" title="Great">😊</button>
+          </div>
+          <button class="btn-primary" onclick="addSkinEntry()" style="width:100%">➕ Add Entry</button>
+        </div>
+        <div>
+          <h3 style="margin-bottom:.8rem">📅 Progress Timeline</h3>
+          <div id="skinTimeline"><p class="muted">No entries yet. Start your progress timeline above.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- SOS Modal -->
+<div id="sosModal" class="modal hidden">
+  <div class="modal-body">
+    <h2>🚨 You're not alone</h2>
+    <p>If you're in crisis or feel unsafe, please reach out immediately:</p>
+    <ul>
+      <li><strong>Women Helpline (National):</strong> 181</li>
+      <li><strong>Domestic Abuse Helpline:</strong> 1091</li>
+      <li><strong>iCall (Mental Health):</strong> 9152987821</li>
+      <li><strong>Vandrevala Foundation:</strong> 1860-2662-345</li>
+      <li><strong>AASRA (Suicide Prevention):</strong> 9820466627</li>
+    </ul>
+    <button class="btn-primary" onclick="hideSOS()">Close</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="lifestage.js"></script>
+</body>
+</html>

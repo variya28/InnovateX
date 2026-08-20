@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Cycle & Symptoms — Aura Care</title>
+<link rel="stylesheet" href="style.css"/>
+<style>
+.cycle-ring{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--pri) 0deg,var(--acc) 120deg,var(--pink) 240deg,var(--pri) 360deg);margin:0 auto;display:flex;align-items:center;justify-content:center}
+.cycle-inner{width:122px;height:122px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem}
+.phase-badge{display:inline-block;padding:.3rem .9rem;border-radius:20px;font-size:.85rem;font-weight:600;background:rgba(167,139,250,.2);color:var(--pri)}
+.symptom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:1rem 0}
+.symptom-btn{background:var(--card2);border:2px solid transparent;color:var(--text);padding:.7rem .5rem;border-radius:12px;cursor:pointer;text-align:center;font-size:.85rem;transition:all .2s;width:100%}
+.symptom-btn:hover{border-color:rgba(167,139,250,.4)}
+.symptom-btn.active{border-color:var(--pri);background:rgba(167,139,250,.15)}
+.insight-card{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(94,234,212,.08));border:1px solid rgba(167,139,250,.25);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
+.warning-card{background:linear-gradient(135deg,rgba(255,107,138,.12),rgba(255,107,138,.05));border:1px solid rgba(255,107,138,.3);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-bottom:1.5rem}
+.stat-mini{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1.2rem;text-align:center}
+.stat-mini .val{font-size:1.8rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+input[type="date"],input[type="number"]{color-scheme:dark}
+.period-entry{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:var(--card2);border-radius:8px;margin-bottom:.4rem;font-size:.9rem}
+</style>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="cycle.html" class="active">🌙 Cycle &amp; Symptoms</a>
+    <a href="health.html">💊 Health Hub</a>
+    <a href="lifestage.html">🌸 Life Stages</a>
+    <a href="resources.html">📚 Resources</a>
+    <a href="community.html">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+  <div class="sos"><a href="#" onclick="showSOS()">🚨 Crisis Help</a></div>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>🌙 Cycle &amp; Symptoms</h1>
+      <p class="muted">Smart tracking · adaptive predictions · early-warning insights</p>
+    </div>
+    <span id="phaseBadge" class="phase-badge">Log period to begin</span>
+  </header>
+
+  <!-- Overview Stats -->
+  <div class="grid-3">
+    <div class="stat-mini">
+      <div class="val" id="cycleDay">—</div>
+      <p class="muted" style="margin-top:.3rem">Cycle Day</p>
+    </div>
+    <div class="stat-mini">
+      <div class="val" id="daysToNext">—</div>
+      <p class="muted" style="margin-top:.3rem">Days to Next Period</p>
+    </div>
+    <div class="stat-mini">
+      <div class="val" id="avgCycle">—</div>
+      <p class="muted" style="margin-top:.3rem">Avg Cycle Length</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Log Period -->
+    <section class="panel">
+      <h2>📅 Log Period Start</h2>
+      <p class="muted" style="margin-bottom:1rem">Mark the first day of your period for accurate predictions.</p>
+      <input type="date" id="periodDate" style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
+      <input type="number" id="cycleLen" placeholder="Cycle length in days (default: 28)" min="20" max="45"
+        style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
+      <button class="btn-primary" onclick="logPeriod()" style="width:100%">💾 Save Period Entry</button>
+      <div id="periodHistory" style="margin-top:1rem"></div>
+    </section>
+
+    <!-- Phase Visualization -->
+    <section class="panel" style="text-align:center">
+      <h2>🔮 Current Cycle Phase</h2>
+      <div class="cycle-ring" style="margin:1.5rem auto">
+        <div class="cycle-inner">
+          <div id="phaseEmoji" style="font-size:2rem">🌑</div>
+          <div id="phaseName" style="font-size:.78rem;font-weight:600;color:var(--muted);margin-top:.2rem">Waiting…</div>
+        </div>
+      </div>
+      <p id="phaseDesc" class="muted" style="font-size:.9rem;max-width:280px;margin:0 auto;line-height:1.5">
+        Log your last period date to see your current phase and personalised guidance.
+      </p>
+    </section>
+  </div>
+
+  <!-- Symptom Logger -->
+  <section class="panel">
+    <h2>📝 Log Today's Symptoms</h2>
+    <p class="muted" style="margin-bottom:.3rem">Select all that apply — helps correlate symptoms with your cycle phase over time.</p>
+    <div class="symptom-grid" id="symptomGrid">
+      <button class="symptom-btn" data-sym="cramps">🔴 Cramps</button>
+      <button class="symptom-btn" data-sym="bloating">💧 Bloating</button>
+      <button class="symptom-btn" data-sym="headache">🤕 Headache</button>
+      <button class="symptom-btn" data-sym="fatigue">😴 Fatigue</button>
+      <button class="symptom-btn" data-sym="mood-swings">🌊 Mood Swings</button>
+      <button class="symptom-btn" data-sym="acne">🌡️ Acne / Breakouts</button>
+      <button class="symptom-btn" data-sym="breast-pain">💛 Breast Tenderness</button>
+      <button class="symptom-btn" data-sym="insomnia">🌙 Insomnia</button>
+      <button class="symptom-btn" data-sym="nausea">🤢 Nausea</button>
+      <button class="symptom-btn" data-sym="back-pain">💪 Back Pain</button>
+      <button class="symptom-btn" data-sym="low-energy">⚡ Low Energy</button>
+      <button class="symptom-btn" data-sym="high-energy">✨ High Energy</button>
+    </div>
+    <!-- Live selection counter -->
+    <div id="symCounter" style="margin-top:.6rem;padding:.6rem 1rem;background:var(--card2);border-radius:10px;font-size:.9rem;color:var(--muted);display:none">
+      <span id="symCountText">0 symptoms selected</span>
+      <span id="symList" style="color:var(--pri);margin-left:.5rem"></span>
+    </div>
+    <textarea id="symNotes" placeholder="Additional notes (optional)..."
+      style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-top:.6rem;resize:vertical;min-height:60px;font-family:inherit"></textarea>
+    <button class="btn-primary" style="margin-top:.8rem;width:100%" id="saveSymBtn" onclick="saveSymptoms()">💾 Save Symptoms</button>
+  </section>
+
+  <!-- Health Insights -->
+  <section class="panel">
+    <h2>💡 Health Insights &amp; Early-Warning</h2>
+    <p class="muted" style="margin-bottom:1rem">Plain-language patterns, trends, and alerts — built from your own tracked data.</p>
+    <div id="insightsContainer">
+      <div class="insight-card">
+        <strong>🌟 Get started</strong>
+        <p class="muted" style="margin-top:.4rem">Log at least 2 period cycles to unlock personalised cycle insights and early-warning pattern detection.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Symptom History -->
+  <section class="panel">
+    <h2>📊 Recent Symptom Log</h2>
+    <ul id="symHistory" class="history"></ul>
+  </section>
+</main>
+
+<!-- SOS Modal -->
+<div id="sosModal" class="modal hidden">
+  <div class="modal-body">
+    <h2>🚨 You're not alone</h2>
+    <p>If you're in crisis or feel unsafe, please reach out immediately:</p>
+    <ul>
+      <li><strong>Women Helpline (National):</strong> 181</li>
+      <li><strong>Domestic Abuse Helpline:</strong> 1091</li>
+      <li><strong>iCall (Mental Health):</strong> 9152987821</li>
+      <li><strong>Vandrevala Foundation:</strong> 1860-2662-345</li>
+      <li><strong>AASRA (Suicide Prevention):</strong> 9820466627</li>
+    </ul>
+    <button class="btn-primary" onclick="hideSOS()">Close</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="cycle.js"></script>
+</body>
+</html>

@@ -118,6 +118,11 @@ footer{padding:2rem;text-align:center;color:var(--muted);border-top:1px solid rg
 .breathe-modal .breathe-circle{width:180px;height:180px;border-radius:50%;background:var(--grad);margin:2rem auto;animation:breathe 8s ease-in-out infinite}
 @keyframes breathe{0%,100%{transform:scale(.6)}50%{transform:scale(1.2)}}
 
+/* Symptom / Stage Buttons (cycle.html, lifestage.html) */
+.symptom-btn{background:var(--card2);border:2px solid transparent;color:var(--text);padding:.7rem .5rem;border-radius:12px;cursor:pointer;text-align:center;font-size:.85rem;transition:all .2s;width:100%;font-family:inherit}
+.symptom-btn:hover{border-color:rgba(167,139,250,.4)}
+.symptom-btn.active{border-color:var(--pri);background:rgba(167,139,250,.15)}
+
 /* Community */
 .post-actions{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .post-actions select{background:var(--card2);color:var(--text);border:1px solid rgba(167,139,250,.2);padding:.6rem;border-radius:8px}

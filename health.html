@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Health Hub — Aura Care</title>
+<link rel="stylesheet" href="style.css"/>
+<script>
+/* Tab switcher defined early so onclick fires even before health.js loads */
+function switchTab(tabId) {
+  document.querySelectorAll('.hub-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.hub-section').forEach(function(s) { s.style.display = 'none'; s.classList.remove('visible'); });
+  var btn = document.querySelector('[data-tab="' + tabId + '"]');
+  var sec = document.getElementById('tab-' + tabId);
+  if (btn) btn.classList.add('active');
+  if (sec) { sec.style.display = 'block'; sec.classList.add('visible'); }
+  if (tabId === 'summary' && window.generateSummary) { generateSummary(); }
+}
+</script>
+<style>
+/* Health Score */
+.score-ring{width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--pri) var(--pct,0deg),var(--card2) var(--pct,0deg));display:flex;align-items:center;justify-content:center;margin:0 auto}
+.score-inner{width:110px;height:110px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-val{font-size:2.2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.score-lbl{font-size:.75rem;color:var(--muted);margin-top:.1rem}
+/* Tabs */
+.hub-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.hub-tab{background:var(--card);color:var(--muted);border:none;padding:.6rem 1.1rem;border-radius:20px;cursor:pointer;font-weight:500;font-size:.9rem;transition:all .2s}
+.hub-tab.active{background:var(--grad2);color:#fff}
+.hub-section{display:none}
+.hub-section.visible{display:block}
+/* Vault */
+.vault-card{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center}
+.vault-card .doc-meta{display:flex;gap:.8rem;align-items:center}
+.vault-type{background:rgba(94,234,212,.15);color:var(--acc);padding:.2rem .7rem;border-radius:10px;font-size:.78rem;font-weight:600}
+.del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:.3rem .6rem;border-radius:6px}
+.del-btn:hover{background:rgba(255,107,138,.15);color:var(--danger)}
+/* Med */
+.med-card{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.med-badge{background:rgba(167,139,250,.15);color:var(--pri);padding:.2rem .7rem;border-radius:10px;font-size:.78rem}
+.taken-btn{background:rgba(94,234,212,.15);color:var(--acc);border:1px solid rgba(94,234,212,.3);padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.taken-btn:hover{background:rgba(94,234,212,.3)}
+/* Nutrition */
+.phase-card{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(94,234,212,.08));border:1px solid rgba(167,139,250,.2);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
+.food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-top:.8rem}
+.food-chip{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:.5rem .8rem;font-size:.85rem;text-align:center}
+/* Activity */
+.activity-card{background:var(--card2);border-radius:12px;padding:1rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center}
+.activity-type{font-size:1.3rem;margin-right:.7rem}
+/* Doctor Summary */
+.summary-box{background:var(--card2);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:1.3rem;font-size:.9rem;line-height:1.8;white-space:pre-wrap;min-height:100px}
+/* form helpers */
+input[type="time"],input[type="date"],select{color-scheme:dark}
+.form-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem}
+.form-row input,.form-row select{flex:1;min-width:140px;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;font-size:.9rem}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
+.metric-card{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1rem;text-align:center}
+.metric-val{font-size:1.6rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+</style>
+</head>
+<body class="app">
+<aside class="sidebar">
+  <div class="logo">🌸 <span>Aura</span></div>
+  <nav>
+    <a href="dashboard.html">🏠 Dashboard</a>
+    <a href="chat.html">💬 Companion</a>
+    <a href="cycle.html">🌙 Cycle &amp; Symptoms</a>
+    <a href="health.html" class="active">💊 Health Hub</a>
+    <a href="lifestage.html">🌸 Life Stages</a>
+    <a href="resources.html">📚 Resources</a>
+    <a href="community.html">👥 Community</a>
+    <a href="index.html">🚪 Logout</a>
+  </nav>
+  <div class="sos"><a href="#" onclick="showSOS()">🚨 Crisis Help</a></div>
+</aside>
+
+<main class="content">
+  <header class="topbar">
+    <div>
+      <h1>💊 Health Hub</h1>
+      <p class="muted">Your connected wellness command centre — records, reminders, nutrition, fitness, and more.</p>
+    </div>
+  </header>
+
+  <!-- Feature 13: Personal Health Score -->
+  <section class="panel" style="margin-bottom:1.5rem">
+    <div style="display:flex;align-items:center;gap:2rem;flex-wrap:wrap">
+      <div>
+        <div class="score-ring" id="scoreRing" style="--pct:0deg">
+          <div class="score-inner">
+            <div class="score-val" id="scoreVal">—</div>
+            <div class="score-lbl">/ 100</div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px">
+        <h2>🏅 Personal Health Score</h2>
+        <p class="muted" style="margin:.5rem 0">Wellness indicator for mood, cycle regularity, activity, and medication adherence.</p>
+        <div id="scoreBreakdown" style="margin-top:.8rem;font-size:.9rem;line-height:1.9"></div>
+        <p class="muted" style="font-size:.78rem;margin-top:.5rem">Score updates as you log more data across Aura Care.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hub Tabs -->
+  <div class="hub-tabs">
+    <button class="hub-tab active" data-tab="vault" onclick="switchTab('vault')">📁 HealthVault</button>
+    <button class="hub-tab" data-tab="meds" onclick="switchTab('meds')">💊 Medicines</button>
+    <button class="hub-tab" data-tab="nutrition" onclick="switchTab('nutrition')">🥗 Nutrition</button>
+    <button class="hub-tab" data-tab="fitness" onclick="switchTab('fitness')">🏃 Fitness</button>
+    <button class="hub-tab" data-tab="summary" onclick="switchTab('summary')">📋 Doctor Summary</button>
+  </div>
+
+  <!-- Feature 07: HealthVault -->
+  <div class="hub-section visible" id="tab-vault">
+    <div class="grid-2">
+      <section class="panel">
+        <h2>📁 Add Health Record</h2>
+        <p class="muted" style="margin-bottom:1rem">Store prescriptions, lab reports, and medical history — securely on your device.</p>
+        <div class="form-row">
+          <input type="text" id="vaultName" placeholder="Document name (e.g. Blood Report)"/>
+          <select id="vaultType">
+            <option value="Lab Report">🧪 Lab Report</option>
+            <option value="Prescription">💊 Prescription</option>
+            <option value="Scan/Imaging">🔬 Scan / Imaging</option>
+            <option value="Vaccination">💉 Vaccination</option>
+            <option value="Discharge Summary">🏥 Discharge Summary</option>
+            <option value="Other">📄 Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="date" id="vaultDate"/>
+          <input type="text" id="vaultDoctor" placeholder="Doctor / Hospital (optional)"/>
+        </div>
+        <textarea id="vaultNotes" placeholder="Key findings or notes (optional)..."
+          style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;margin-bottom:.8rem"></textarea>
+        <button class="btn-primary" onclick="addVaultRecord()" style="width:100%">💾 Save Record</button>
+      </section>
+      <section class="panel">
+        <h2>📂 Saved Records</h2>
+        <div id="vaultList"><p class="muted">No records saved yet. Add your first health document above.</p></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Feature 08: Smart Medicine Reminder -->
+  <div class="hub-section" id="tab-meds">
+    <div class="grid-2">
+      <section class="panel">
+        <h2>💊 Add Medicine</h2>
+        <p class="muted" style="margin-bottom:1rem">Set schedules and adherence tracking. Aura Care never prescribes medicine.</p>
+        <div class="form-row">
+          <input type="text" id="medName" placeholder="Medicine name"/>
+          <input type="number" id="medDose" placeholder="Dose (mg)" min="1" style="max-width:120px"/>
+        </div>
+        <div class="form-row">
+          <input type="time" id="medTime"/>
+          <select id="medFreq">
+            <option value="Once daily">Once daily</option>
+            <option value="Twice daily">Twice daily</option>
+            <option value="Thrice daily">Thrice daily</option>
+            <option value="Weekly">Weekly</option>
+            <option value="As needed">As needed</option>
+          </select>
+        </div>
+        <input type="text" id="medNote" placeholder="Instructions (e.g. After meals)"
+          style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit"/>
+        <button class="btn-primary" onclick="addMed()" style="width:100%">➕ Add Reminder</button>
+      </section>
+      <section class="panel">
+        <h2>🔔 Medicine Schedule</h2>
+        <p class="muted" style="margin-bottom:1rem">Mark medicines as taken to track adherence.</p>
+        <div id="medList"><p class="muted">No medicines added yet.</p></div>
+        <div id="adherenceBar" style="margin-top:1rem"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Feature 10: AI Nutritional Planner -->
+  <div class="hub-section" id="tab-nutrition">
+    <section class="panel">
+      <h2>🥗 AI Nutritional Planner</h2>
+      <p class="muted" style="margin-bottom:1rem">Personalised guidance built around Indian food data and your cycle phase.</p>
+      <div id="nutritionPhaseCard" class="phase-card">
+        <strong>🌙 Log your cycle to get phase-specific nutrition advice</strong>
+        <p class="muted" style="margin-top:.4rem">Your food recommendations will adapt to your menstrual, follicular, ovulatory, and luteal phases.</p>
+      </div>
+      <div id="nutritionContent"></div>
+    </section>
+    <section class="panel">
+      <h2>📝 Log a Meal</h2>
+      <div class="form-row">
+        <input type="text" id="mealName" placeholder="What did you eat? (e.g. Dal Chawal, Idli)"/>
+        <select id="mealCat">
+          <option value="Breakfast">🌅 Breakfast</option>
+          <option value="Lunch">☀️ Lunch</option>
+          <option value="Dinner">🌙 Dinner</option>
+          <option value="Snack">🍎 Snack</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <input type="number" id="mealCal" placeholder="Approx. calories (optional)" min="0"/>
+        <input type="text" id="mealNote" placeholder="Notes (optional)"/>
+      </div>
+      <button class="btn-primary" onclick="logMeal()">💾 Save Meal</button>
+      <div id="mealHistory" style="margin-top:1rem"></div>
+    </section>
+  </div>
+
+  <!-- Feature 11: Fitness & Activity -->
+  <div class="hub-section" id="tab-fitness">
+    <div class="grid-4">
+      <div class="metric-card"><div class="metric-val" id="weekSteps">—</div><p class="muted">Avg Steps/Day</p></div>
+      <div class="metric-card"><div class="metric-val" id="weekActive">—</div><p class="muted">Active Days (7d)</p></div>
+      <div class="metric-card"><div class="metric-val" id="weekMinutes">—</div><p class="muted">Avg Duration (min)</p></div>
+      <div class="metric-card"><div class="metric-val" id="weekCals">—</div><p class="muted">Avg Cals Burned</p></div>
+    </div>
+    <div class="grid-2">
+      <section class="panel">
+        <h2>🏃 Log Activity</h2>
+        <p class="muted" style="margin-bottom:1rem">Activity correlates with your cycle, sleep, and symptoms.</p>
+        <div class="form-row">
+          <select id="actType">
+            <option value="🚶 Walk">🚶 Walk</option>
+            <option value="🏃 Run">🏃 Run</option>
+            <option value="🧘 Yoga">🧘 Yoga</option>
+            <option value="🚴 Cycling">🚴 Cycling</option>
+            <option value="💃 Dance">💃 Dance</option>
+            <option value="🏊 Swimming">🏊 Swimming</option>
+            <option value="🏋️ Strength Training">🏋️ Strength Training</option>
+            <option value="🤸 Stretching">🤸 Stretching</option>
+            <option value="Other">✨ Other</option>
+          </select>
+          <input type="number" id="actDuration" placeholder="Duration (min)" min="1"/>
+        </div>
+        <div class="form-row">
+          <input type="number" id="actSteps" placeholder="Steps (optional)" min="0"/>
+          <input type="date" id="actDate"/>
+        </div>
+        <button class="btn-primary" onclick="logActivity()" style="width:100%">💾 Log Activity</button>
+      </section>
+      <section class="panel">
+        <h2>📅 Recent Activity</h2>
+        <div id="actHistory"></div>
+        <div id="cycleActivityTip" style="margin-top:1rem"></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Feature 12: Doctor Visit Summary -->
+  <div class="hub-section" id="tab-summary">
+    <section class="panel">
+      <h2>📋 Doctor Visit Summary</h2>
+      <p class="muted" style="margin-bottom:1rem">Months of tracking — mood, symptoms, cycle, and activity — become a concise, chronological report for your next doctor visit.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+        <select id="summaryRange" style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.7rem 1rem;border-radius:10px">
+          <option value="1">Last 1 month</option>
+          <option value="3" selected>Last 3 months</option>
+          <option value="6">Last 6 months</option>
+        </select>
+        <button class="btn-primary" onclick="generateSummary()">📄 Generate Summary</button>
+        <button class="btn-ghost" onclick="copySummary()">📋 Copy to Clipboard</button>
+      </div>
+      <div class="summary-box" id="summaryBox">AURA CARE — PATIENT HEALTH SUMMARY  [SAMPLE PREVIEW]
+Generated: 20 August 2026  |  Period: Last 3 months
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MENSTRUAL CYCLE
+• Cycles logged: 3
+• Average cycle length: 29 days
+• Period dates: 2026-07-22, 2026-06-23, 2026-05-25
+• Cycle regularity: Regular
+
+MOOD &amp; MENTAL WELLNESS
+• Mood entries: 24
+• Average mood score: 3.8 / 5
+• Recent moods: 🙂 Good, 😊 Great, 😐 Okay, 🙂 Good, 😊 Great
+
+SYMPTOMS
+• Symptom entries: 18
+• Most frequent: cramps (6×), bloating (5×), fatigue (4×), mood swings (3×)
+
+PHYSICAL ACTIVITY
+• Activity sessions logged: 14
+• Types: Yoga, Walk, Run, Cycling, Dance
+
+MEDICATIONS
+• Iron Supplement 65mg — Once daily (After breakfast)
+• Folic Acid 5mg — Once daily (With breakfast)
+• Vitamin D3 60000IU — Weekly (Sunday morning)
+
+HEALTH RECORDS (HealthVault)
+• Lab Report: Complete Blood Count — 2026-07-15
+• Prescription: Dr. Anjali Sharma, Apollo — 2026-07-15
+• Scan/Imaging: Pelvic Ultrasound — 2026-06-10
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Generated by Aura Care — AI Women's Wellness App
+This summary is informational only and does not constitute medical advice.
+Please discuss all findings with your healthcare provider.
+
+─────────────────────────────────────────
+ ↑ SAMPLE PREVIEW — Start logging data in Aura Care and click
+   "Generate Summary" to create your personalised doctor report.
+─────────────────────────────────────────</div>
+    </section>
+  </div>
+</main>
+
+<!-- SOS Modal -->
+<div id="sosModal" class="modal hidden">
+  <div class="modal-body">
+    <h2>🚨 You're not alone</h2>
+    <p>If you're in crisis or feel unsafe, please reach out immediately:</p>
+    <ul>
+      <li><strong>Women Helpline (National):</strong> 181</li>
+      <li><strong>Domestic Abuse Helpline:</strong> 1091</li>
+      <li><strong>iCall (Mental Health):</strong> 9152987821</li>
+      <li><strong>Vandrevala Foundation:</strong> 1860-2662-345</li>
+      <li><strong>AASRA (Suicide Prevention):</strong> 9820466627</li>
+    </ul>
+    <button class="btn-primary" onclick="hideSOS()">Close</button>
+  </div>
+</div>
+
+<script src="app.js?v=4"></script>
+<script src="health.js?v=4"></script>
+</body>
+</html>

@@ -11,6 +11,9 @@
   <nav>
     <a href="dashboard.html" class="active">🏠 Dashboard</a>
     <a href="chat.html">💬 Companion</a>
+    <a href="cycle.html">🌙 Cycle &amp; Symptoms</a>
+    <a href="health.html">💊 Health Hub</a>
+    <a href="lifestage.html">🌸 Life Stages</a>
     <a href="resources.html">📚 Resources</a>
     <a href="community.html">👥 Community</a>
     <a href="index.html">🚪 Logout</a>
@@ -24,8 +27,38 @@
       <h1>Hi, Sister 💜</h1>
       <p class="muted">How are you feeling today?</p>
     </div>
-    <div class="streak-badge">🔥 <span id="streak">7</span>-day streak</div>
+    <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap">
+      <div class="streak-badge" id="cyclePhaseBadge" style="cursor:pointer" onclick="location.href='cycle.html'">🌙 Log cycle →</div>
+      <div class="streak-badge">🔥 <span id="streak">7</span>-day streak</div>
+    </div>
   </header>
+
+  <!-- Health Score + Cycle snapshot -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-bottom:1.5rem">
+    <div class="panel" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:0;padding:1.2rem 1.5rem">
+      <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--pri) var(--score-deg,0deg),var(--card2) var(--score-deg,0deg));display:flex;align-items:center;justify-content:center;flex-shrink:0" id="dashScoreRing">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700" id="dashScoreVal">—</div>
+      </div>
+      <div>
+        <div style="font-weight:600;font-size:.95rem">Health Score</div>
+        <div class="muted" style="font-size:.82rem" id="dashScoreLbl">Log more to update</div>
+        <a href="health.html" style="font-size:.8rem;color:var(--pri)">View details →</a>
+      </div>
+    </div>
+    <div class="panel" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:0;padding:1.2rem 1.5rem">
+      <div style="font-size:2.5rem" id="dashPhaseEmoji">🌑</div>
+      <div>
+        <div style="font-weight:600;font-size:.95rem" id="dashPhaseName">Cycle Phase</div>
+        <div class="muted" style="font-size:.82rem" id="dashCycleDay">Log your period to begin</div>
+        <a href="cycle.html" style="font-size:.8rem;color:var(--pri)">Track cycle →</a>
+      </div>
+    </div>
+    <div class="panel" style="margin-bottom:0;padding:1.2rem 1.5rem">
+      <div style="font-weight:600;font-size:.95rem;margin-bottom:.6rem">💊 Today's Reminders</div>
+      <div id="dashMeds" style="font-size:.88rem;color:var(--muted)">No medicines logged.</div>
+      <a href="health.html" style="font-size:.8rem;color:var(--pri)">Manage →</a>
+    </div>
+  </div>
 
   <section class="mood-log">
     <h2>Log your mood</h2>
@@ -82,5 +115,61 @@
 </div>
 
 <script src="app.js"></script>
+<script>
+/* Dashboard: Health Score + Cycle Phase + Med Reminders */
+(function dashboardExtras() {
+  // Health Score
+  const moodScale = { Great:5, Good:4, Okay:3, Low:2, Sad:1, Angry:1 };
+  const moods = JSON.parse(localStorage.getItem('aura_moods') || '[]').slice(0, 7);
+  const cycles = JSON.parse(localStorage.getItem('aura_cycles') || '[]');
+  const activity = JSON.parse(localStorage.getItem('aura_activity') || '[]');
+  const meds = JSON.parse(localStorage.getItem('aura_meds') || '[]');
+  let mood = 5, cycle = 5, act = 0, adh = 25;
+  if (moods.length) { const a = moods.reduce((s,m) => s+(moodScale[m.label]||3),0)/moods.length; mood = Math.round((a/5)*25); }
+  if (cycles.length >= 2) { const lens=cycles.slice(0,6).map(c=>c.cycleLen); cycle=(Math.max(...lens)-Math.min(...lens))<=7?25:15; }
+  else if (cycles.length===1) { cycle=12; }
+  const now = Date.now();
+  const weekActs = activity.filter(a => now-new Date(a.date).getTime() < 7*86400000);
+  act = Math.round((Math.min(weekActs.length,7)/7)*25);
+  if (meds.length) { const todayStr=new Date().toDateString(); const taken=meds.filter(m=>m.lastTaken&&new Date(m.lastTaken).toDateString()===todayStr).length; adh=Math.round((taken/meds.length)*25); }
+  const total = mood + cycle + act + adh;
+  const scoreValEl = document.getElementById('dashScoreVal');
+  const scoreRingEl = document.getElementById('dashScoreRing');
+  const scoreLblEl = document.getElementById('dashScoreLbl');
+  if (scoreValEl) scoreValEl.textContent = total;
+  if (scoreRingEl) { const deg=Math.round((total/100)*360); scoreRingEl.style.background=`conic-gradient(var(--pri) ${deg}deg,var(--card2) ${deg}deg)`; }
+  if (scoreLblEl) scoreLblEl.textContent = total>=80?'🌟 Excellent':total>=60?'💜 Good':total>=40?'🌱 Building':'🌸 Keep going';
+
+  // Cycle Phase
+  if (cycles.length) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const last = new Date(cycles[0].date+'T00:00:00'); last.setHours(0,0,0,0);
+    const dayNum = Math.floor((today-last)/86400000)+1;
+    const len = cycles[0].cycleLen||28;
+    const d = ((dayNum-1)%len)+1;
+    const phases = { menstrual:{e:'🔴',n:'Menstrual'}, follicular:{e:'🌱',n:'Follicular'}, ovulation:{e:'✨',n:'Ovulatory'}, luteal:{e:'🌙',n:'Luteal'} };
+    const key = d<=5?'menstrual':d<=13?'follicular':d<=16?'ovulation':'luteal';
+    const p = phases[key];
+    const emojiEl = document.getElementById('dashPhaseEmoji');
+    const nameEl = document.getElementById('dashPhaseName');
+    const dayEl = document.getElementById('dashCycleDay');
+    const badgeEl = document.getElementById('cyclePhaseBadge');
+    if (emojiEl) emojiEl.textContent = p.e;
+    if (nameEl) nameEl.textContent = p.n + ' Phase';
+    if (dayEl) dayEl.textContent = `Day ${dayNum} of cycle`;
+    if (badgeEl) badgeEl.textContent = `${p.e} ${p.n} · Day ${dayNum}`;
+  }
+
+  // Med Reminders
+  const medEl = document.getElementById('dashMeds');
+  if (medEl && meds.length) {
+    const todayStr = new Date().toDateString();
+    const due = meds.filter(m => !m.lastTaken || new Date(m.lastTaken).toDateString() !== todayStr);
+    medEl.innerHTML = due.length
+      ? due.slice(0,3).map(m=>`<div style="padding:.3rem 0;border-bottom:1px solid rgba(167,139,250,.08)">💊 ${m.name}${m.dose?' '+m.dose:''} — ${m.freq}</div>`).join('')
+      : '<div style="color:var(--acc)">✅ All medicines taken today!</div>';
+  }
+})();
+</script>
 </body>
 </html>
