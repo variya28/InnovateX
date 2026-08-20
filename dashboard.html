@@ -37,7 +37,7 @@
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem;margin-bottom:1.5rem">
     <div class="panel" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:0;padding:1.2rem 1.5rem">
       <div style="width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--pri) var(--score-deg,0deg),var(--card2) var(--score-deg,0deg));display:flex;align-items:center;justify-content:center;flex-shrink:0" id="dashScoreRing">
-        <div style="width:44px;height:44px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700" id="dashScoreVal">—</div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(36,52,77,.08);display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700" id="dashScoreVal">—</div>
       </div>
       <div>
         <div style="font-weight:600;font-size:.95rem">Health Score</div>
@@ -166,8 +166,8 @@
     const todayStr = new Date().toDateString();
     const due = meds.filter(m => !m.lastTaken || new Date(m.lastTaken).toDateString() !== todayStr);
     medEl.innerHTML = due.length
-      ? due.slice(0,3).map(m=>`<div style="padding:.3rem 0;border-bottom:1px solid rgba(167,139,250,.08)">💊 ${m.name}${m.dose?' '+m.dose:''} — ${m.freq}</div>`).join('')
-      : '<div style="color:var(--acc)">✅ All medicines taken today!</div>';
+      ? due.slice(0,3).map(m=>`<div style="padding:.3rem 0;border-bottom:1px solid var(--lav-fill)">💊 ${m.name}${m.dose?' '+m.dose:''} — ${m.freq}</div>`).join('')
+      : '<div style="color:#2E7D5A">✅ All medicines taken today!</div>';
   }
 })();
 </script>

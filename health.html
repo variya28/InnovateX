@@ -18,43 +18,44 @@ function switchTab(tabId) {
 </script>
 <style>
 /* Health Score */
-.score-ring{width:160px;height:160px;border-radius:50%;background:conic-gradient(var(--pri) var(--pct,0deg),var(--card2) var(--pct,0deg));display:flex;align-items:center;justify-content:center;margin:0 auto}
-.score-inner{width:110px;height:110px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center}
-.score-val{font-size:2.2rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.score-ring{width:160px;height:160px;border-radius:50%;background:conic-gradient(#DCE8F5 0deg,#DCE8F5 360deg);display:flex;align-items:center;justify-content:center;margin:0 auto}
+.score-inner{width:110px;height:110px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(36,52,77,.08)}
+.score-val{font-size:2.2rem;font-weight:800;color:var(--pri)}
 .score-lbl{font-size:.75rem;color:var(--muted);margin-top:.1rem}
 /* Tabs */
 .hub-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
-.hub-tab{background:var(--card);color:var(--muted);border:none;padding:.6rem 1.1rem;border-radius:20px;cursor:pointer;font-weight:500;font-size:.9rem;transition:all .2s}
-.hub-tab.active{background:var(--grad2);color:#fff}
+.hub-tab{background:var(--lav-fill);color:var(--muted);border:1px solid var(--lav-border);padding:.6rem 1.1rem;border-radius:20px;cursor:pointer;font-weight:500;font-size:.9rem;transition:all .2s}
+.hub-tab.active{background:var(--pri);color:#fff;border-color:var(--pri)}
 .hub-section{display:none}
 .hub-section.visible{display:block}
 /* Vault */
-.vault-card{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center}
+.vault-card{background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center}
 .vault-card .doc-meta{display:flex;gap:.8rem;align-items:center}
-.vault-type{background:rgba(94,234,212,.15);color:var(--acc);padding:.2rem .7rem;border-radius:10px;font-size:.78rem;font-weight:600}
+.vault-type{background:var(--mint-fill);color:#2E7D5A;border:1px solid var(--mint-border);padding:.2rem .7rem;border-radius:10px;font-size:.78rem;font-weight:600}
 .del-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:.3rem .6rem;border-radius:6px}
-.del-btn:hover{background:rgba(255,107,138,.15);color:var(--danger)}
+.del-btn:hover{background:var(--rose-fill);color:#C0392B}
 /* Med */
-.med-card{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
-.med-badge{background:rgba(167,139,250,.15);color:var(--pri);padding:.2rem .7rem;border-radius:10px;font-size:.78rem}
-.taken-btn{background:rgba(94,234,212,.15);color:var(--acc);border:1px solid rgba(94,234,212,.3);padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
-.taken-btn:hover{background:rgba(94,234,212,.3)}
+.med-card{background:#fff;border:1px solid var(--lav-border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;box-shadow:0 1px 6px rgba(36,52,77,.05)}
+.med-badge{background:var(--lav-fill);color:var(--pri);border:1px solid var(--lav-border);padding:.2rem .7rem;border-radius:10px;font-size:.78rem}
+.taken-btn{background:var(--mint-fill);color:#2E7D5A;border:1px solid var(--mint-border);padding:.4rem .9rem;border-radius:8px;cursor:pointer;font-size:.85rem;font-weight:600}
+.taken-btn:hover{background:var(--mint-border);color:#fff}
 /* Nutrition */
-.phase-card{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(94,234,212,.08));border:1px solid rgba(167,139,250,.2);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
+.phase-card{background:var(--purp-fill);border:1px solid var(--purp-border);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
 .food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.6rem;margin-top:.8rem}
-.food-chip{background:var(--card2);border:1px solid rgba(167,139,250,.15);border-radius:10px;padding:.5rem .8rem;font-size:.85rem;text-align:center}
+.food-chip{background:#fff;border:1px solid var(--lav-border);border-radius:10px;padding:.5rem .8rem;font-size:.85rem;text-align:center;color:var(--text)}
 /* Activity */
-.activity-card{background:var(--card2);border-radius:12px;padding:1rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center}
+.activity-card{background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:12px;padding:1rem;margin-bottom:.6rem;display:flex;justify-content:space-between;align-items:center}
 .activity-type{font-size:1.3rem;margin-right:.7rem}
 /* Doctor Summary */
-.summary-box{background:var(--card2);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:1.3rem;font-size:.9rem;line-height:1.8;white-space:pre-wrap;min-height:100px}
+.summary-box{background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:12px;padding:1.3rem;font-size:.88rem;line-height:1.9;white-space:pre-wrap;min-height:100px;color:var(--text)}
 /* form helpers */
-input[type="time"],input[type="date"],select{color-scheme:dark}
+input[type="time"],input[type="date"],select{color-scheme:light}
 .form-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem}
-.form-row input,.form-row select{flex:1;min-width:140px;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;font-size:.9rem}
+.form-row input,.form-row select{flex:1;min-width:140px;background:#fff;border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;font-size:.9rem}
+.form-row input:focus,.form-row select:focus{outline:none;border-color:var(--pri)}
 .grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;margin-bottom:1.5rem}
-.metric-card{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1rem;text-align:center}
-.metric-val{font-size:1.6rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.metric-card{background:#fff;border:1px solid var(--lav-border);border-radius:14px;padding:1rem;text-align:center;box-shadow:0 1px 6px rgba(36,52,77,.05)}
+.metric-val{font-size:1.6rem;font-weight:700;color:var(--pri)}
 </style>
 </head>
 <body class="app">
@@ -132,7 +133,7 @@ input[type="time"],input[type="date"],select{color-scheme:dark}
           <input type="text" id="vaultDoctor" placeholder="Doctor / Hospital (optional)"/>
         </div>
         <textarea id="vaultNotes" placeholder="Key findings or notes (optional)..."
-          style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;margin-bottom:.8rem"></textarea>
+          style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:70px;font-family:inherit;margin-bottom:.8rem"></textarea>
         <button class="btn-primary" onclick="addVaultRecord()" style="width:100%">💾 Save Record</button>
       </section>
       <section class="panel">
@@ -163,7 +164,7 @@ input[type="time"],input[type="date"],select{color-scheme:dark}
           </select>
         </div>
         <input type="text" id="medNote" placeholder="Instructions (e.g. After meals)"
-          style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit"/>
+          style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit"/>
         <button class="btn-primary" onclick="addMed()" style="width:100%">➕ Add Reminder</button>
       </section>
       <section class="panel">
@@ -252,7 +253,7 @@ input[type="time"],input[type="date"],select{color-scheme:dark}
       <h2>📋 Doctor Visit Summary</h2>
       <p class="muted" style="margin-bottom:1rem">Months of tracking — mood, symptoms, cycle, and activity — become a concise, chronological report for your next doctor visit.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
-        <select id="summaryRange" style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.7rem 1rem;border-radius:10px">
+        <select id="summaryRange" style="background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.7rem 1rem;border-radius:10px">
           <option value="1">Last 1 month</option>
           <option value="3" selected>Last 3 months</option>
           <option value="6">Last 6 months</option>

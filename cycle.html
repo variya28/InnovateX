@@ -5,20 +5,19 @@
 <title>Cycle & Symptoms — Aura Care</title>
 <link rel="stylesheet" href="style.css"/>
 <style>
-.cycle-ring{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--pri) 0deg,var(--acc) 120deg,var(--pink) 240deg,var(--pri) 360deg);margin:0 auto;display:flex;align-items:center;justify-content:center}
-.cycle-inner{width:122px;height:122px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem}
-.phase-badge{display:inline-block;padding:.3rem .9rem;border-radius:20px;font-size:.85rem;font-weight:600;background:rgba(167,139,250,.2);color:var(--pri)}
+.cycle-ring{width:180px;height:180px;border-radius:50%;background:conic-gradient(#0070C0 0deg,#7FC4A0 120deg,#D68CA0 240deg,#0070C0 360deg);margin:0 auto;display:flex;align-items:center;justify-content:center}
+.cycle-inner{width:122px;height:122px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;box-shadow:0 2px 12px rgba(36,52,77,.1)}
+.phase-badge{display:inline-block;padding:.3rem .9rem;border-radius:20px;font-size:.85rem;font-weight:600;background:var(--lav-fill);color:var(--pri);border:1px solid var(--lav-border)}
 .symptom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin:1rem 0}
-.symptom-btn{background:var(--card2);border:2px solid transparent;color:var(--text);padding:.7rem .5rem;border-radius:12px;cursor:pointer;text-align:center;font-size:.85rem;transition:all .2s;width:100%}
-.symptom-btn:hover{border-color:rgba(167,139,250,.4)}
-.symptom-btn.active{border-color:var(--pri);background:rgba(167,139,250,.15)}
-.insight-card{background:linear-gradient(135deg,rgba(167,139,250,.12),rgba(94,234,212,.08));border:1px solid rgba(167,139,250,.25);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
-.warning-card{background:linear-gradient(135deg,rgba(255,107,138,.12),rgba(255,107,138,.05));border:1px solid rgba(255,107,138,.3);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
+.insight-card{background:var(--purp-fill);border:1px solid var(--purp-border);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
+.warning-card{background:var(--rose-fill);border:1px solid var(--rose-border);border-radius:14px;padding:1.2rem;margin-bottom:.8rem}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-bottom:1.5rem}
-.stat-mini{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1.2rem;text-align:center}
-.stat-mini .val{font-size:1.8rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-input[type="date"],input[type="number"]{color-scheme:dark}
-.period-entry{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:var(--card2);border-radius:8px;margin-bottom:.4rem;font-size:.9rem}
+.stat-mini{background:#fff;border:1px solid var(--lav-border);border-radius:14px;padding:1.2rem;text-align:center;box-shadow:0 2px 8px rgba(36,52,77,.06)}
+.stat-mini .val{font-size:1.8rem;font-weight:800;color:var(--pri)}
+input[type="date"],input[type="number"]{color-scheme:light}
+input[type="date"],input[type="number"],textarea,select{background:#fff;border:1px solid var(--lav-border);color:var(--text);border-radius:10px;padding:.8rem;font-family:inherit;font-size:.9rem;width:100%}
+input[type="date"]:focus,input[type="number"]:focus,textarea:focus{outline:none;border-color:var(--pri)}
+.period-entry{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:8px;margin-bottom:.4rem;font-size:.9rem}
 </style>
 </head>
 <body class="app">
@@ -67,9 +66,9 @@ input[type="date"],input[type="number"]{color-scheme:dark}
     <section class="panel">
       <h2>📅 Log Period Start</h2>
       <p class="muted" style="margin-bottom:1rem">Mark the first day of your period for accurate predictions.</p>
-      <input type="date" id="periodDate" style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
+      <input type="date" id="periodDate" style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
       <input type="number" id="cycleLen" placeholder="Cycle length in days (default: 28)" min="20" max="45"
-        style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
+        style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.9rem;border-radius:10px;margin-bottom:.8rem;font-size:1rem"/>
       <button class="btn-primary" onclick="logPeriod()" style="width:100%">💾 Save Period Entry</button>
       <div id="periodHistory" style="margin-top:1rem"></div>
     </section>
@@ -108,12 +107,12 @@ input[type="date"],input[type="number"]{color-scheme:dark}
       <button class="symptom-btn" data-sym="high-energy">✨ High Energy</button>
     </div>
     <!-- Live selection counter -->
-    <div id="symCounter" style="margin-top:.6rem;padding:.6rem 1rem;background:var(--card2);border-radius:10px;font-size:.9rem;color:var(--muted);display:none">
+    <div id="symCounter" style="margin-top:.6rem;padding:.6rem 1rem;background:var(--lav-fill);border-radius:10px;font-size:.9rem;color:var(--muted);display:none">
       <span id="symCountText">0 symptoms selected</span>
       <span id="symList" style="color:var(--pri);margin-left:.5rem"></span>
     </div>
     <textarea id="symNotes" placeholder="Additional notes (optional)..."
-      style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-top:.6rem;resize:vertical;min-height:60px;font-family:inherit"></textarea>
+      style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;margin-top:.6rem;resize:vertical;min-height:60px;font-family:inherit"></textarea>
     <button class="btn-primary" style="margin-top:.8rem;width:100%" id="saveSymBtn" onclick="saveSymptoms()">💾 Save Symptoms</button>
   </section>
 

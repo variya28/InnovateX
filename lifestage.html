@@ -7,34 +7,37 @@
 <style>
 /* Stage selector */
 .stage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.8rem;margin-bottom:1.5rem}
-.stage-card{background:var(--card);border:2px solid transparent;border-radius:16px;padding:1.4rem 1rem;text-align:center;cursor:pointer;transition:all .2s}
-.stage-card:hover{border-color:rgba(167,139,250,.4);transform:translateY(-3px)}
-.stage-card.active{border-color:var(--pri);background:rgba(167,139,250,.1)}
+.stage-card{background:#fff;border:2px solid var(--lav-border);border-radius:16px;padding:1.4rem 1rem;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 1px 6px rgba(36,52,77,.05)}
+.stage-card:hover{border-color:var(--purp-border);transform:translateY(-3px);box-shadow:0 4px 16px rgba(36,52,77,.1)}
+.stage-card.active{border-color:var(--pri);background:var(--lav-fill)}
 .stage-card .stage-icon{font-size:2.4rem;margin-bottom:.5rem}
-.stage-card h3{font-size:.95rem;margin-bottom:.2rem}
+.stage-card h3{font-size:.95rem;margin-bottom:.2rem;color:var(--text)}
 .stage-card p{font-size:.78rem;color:var(--muted)}
 /* Stage content */
 .stage-content{display:none}
 .stage-content.visible{display:block}
 /* PCOS quiz */
-.quiz-q{background:var(--card);border:1px solid rgba(167,139,250,.1);border-radius:14px;padding:1.3rem;margin-bottom:1rem}
-.quiz-q h3{font-size:1rem;margin-bottom:.8rem;font-weight:600}
+.quiz-q{background:#fff;border:1px solid var(--lav-border);border-radius:14px;padding:1.3rem;margin-bottom:1rem;box-shadow:0 1px 6px rgba(36,52,77,.04)}
+.quiz-q h3{font-size:1rem;margin-bottom:.8rem;font-weight:600;color:var(--text)}
 .quiz-opts{display:flex;gap:.6rem;flex-wrap:wrap}
-.quiz-opt{background:var(--card2);border:2px solid transparent;color:var(--text);padding:.6rem 1.1rem;border-radius:10px;cursor:pointer;font-size:.9rem;transition:all .2s}
-.quiz-opt:hover{border-color:rgba(167,139,250,.4)}
-.quiz-opt.selected{border-color:var(--pri);background:rgba(167,139,250,.15)}
-.result-low{background:linear-gradient(135deg,rgba(94,234,212,.15),rgba(94,234,212,.05));border:1px solid rgba(94,234,212,.3);border-radius:14px;padding:1.5rem}
-.result-mod{background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.05));border:1px solid rgba(167,139,250,.3);border-radius:14px;padding:1.5rem}
-.result-high{background:linear-gradient(135deg,rgba(255,107,138,.15),rgba(255,107,138,.05));border:1px solid rgba(255,107,138,.3);border-radius:14px;padding:1.5rem}
+.quiz-opt{background:var(--lav-fill);border:1.5px solid var(--lav-border);color:var(--text);padding:.6rem 1.1rem;border-radius:10px;cursor:pointer;font-size:.88rem;transition:all .2s}
+.quiz-opt:hover{border-color:var(--purp-border);background:var(--purp-fill)}
+.quiz-opt.selected{border-color:var(--pri);background:#E8F3FA;color:var(--pri);font-weight:600}
+.result-low{background:var(--mint-fill);border:1px solid var(--mint-border);border-radius:14px;padding:1.5rem}
+.result-mod{background:var(--purp-fill);border:1px solid var(--purp-border);border-radius:14px;padding:1.5rem}
+.result-high{background:var(--rose-fill);border:1px solid var(--rose-border);border-radius:14px;padding:1.5rem}
 /* Skin/Hair progress */
-.progress-entry{background:var(--card2);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem}
+.progress-entry{background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:.7rem}
 .progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
 .progress-rating{display:flex;gap:.3rem}
-.rating-dot{width:12px;height:12px;border-radius:50%;background:var(--card);border:1.5px solid rgba(167,139,250,.3);cursor:pointer;transition:all .2s}
+.rating-dot{width:12px;height:12px;border-radius:50%;background:#fff;border:1.5px solid var(--lav-border);cursor:pointer;transition:all .2s}
 .rating-dot.filled{background:var(--pri);border-color:var(--pri)}
 /* Pregnancy week */
-.week-card{background:var(--card2);border-radius:12px;padding:1rem;margin-bottom:.7rem;border-left:3px solid var(--pri)}
-.tag-badge{display:inline-block;background:rgba(240,171,252,.15);color:var(--pink);border-radius:10px;padding:.2rem .7rem;font-size:.78rem;font-weight:600;margin-left:.5rem}
+.week-card{background:var(--lav-fill);border:1px solid var(--lav-border);border-radius:12px;padding:1rem;margin-bottom:.7rem;border-left:4px solid var(--pri)}
+.tag-badge{display:inline-block;background:var(--peach-fill);color:#7A4B1A;border:1px solid var(--peach-border);border-radius:10px;padding:.2rem .7rem;font-size:.78rem;font-weight:600;margin-left:.5rem}
+/* inputs on lifestage */
+select,input[type="date"],input[type="number"],input[type="text"],textarea{background:#fff;border:1px solid var(--lav-border);color:var(--text);border-radius:10px;font-family:inherit;color-scheme:light}
+select:focus,input:focus,textarea:focus{outline:none;border-color:var(--pri)}
 </style>
 </head>
 <body class="app">
@@ -97,29 +100,29 @@
       <p class="muted" style="margin-bottom:1.5rem">Everything here is private to your device. No names, no judgment, just facts and support.</p>
       <div class="grid-2">
         <div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--pink);margin-bottom:.7rem">🩸 What is a Period?</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#7A4B1A;margin-bottom:.7rem">🩸 What is a Period?</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">A period (menstruation) is when the uterus sheds its lining. It usually lasts 3–7 days and comes once a month. It's completely normal — every woman has one.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--acc);margin-bottom:.7rem">📆 Will it be regular?</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#2E7D5A;margin-bottom:.7rem">📆 Will it be regular?</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">In the first 1–2 years, periods are often irregular — that's normal! Stress, weight changes, and illness can also shift dates. Use the Cycle Tracker to log yours.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem">
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem">
             <h3 style="color:var(--pri);margin-bottom:.7rem">🛡️ Privacy First</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">All your data stays on this device only. No cloud, no sharing. You control everything.</p>
           </div>
         </div>
         <div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--pink);margin-bottom:.7rem">😟 Is it supposed to hurt?</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#7A4B1A;margin-bottom:.7rem">😟 Is it supposed to hurt?</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Mild cramps are normal. Severe pain that stops you from daily activities is not — talk to a trusted adult or doctor. You deserve to be pain-free.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--acc);margin-bottom:.7rem">🧴 Products 101</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#2E7D5A;margin-bottom:.7rem">🧴 Products 101</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Pads, tampons, menstrual cups, and period underwear all work. There's no "right" choice — use whatever feels comfortable for you.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem">
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem">
             <h3 style="color:var(--pri);margin-bottom:.7rem">💬 Need to talk?</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Aura AI is available 24/7 and completely anonymous. <a href="chat.html" style="color:var(--pri)">Start a conversation →</a></p>
           </div>
@@ -154,7 +157,7 @@
       <p class="muted" style="margin-bottom:1rem">Enter your last menstrual period (LMP) date to calculate your current week and get guidance.</p>
       <div style="display:flex;gap:.8rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem">
         <label style="font-weight:600">LMP Date:</label>
-        <input type="date" id="lmpDate" style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-size:1rem"/>
+        <input type="date" id="lmpDate" style="background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;font-size:1rem"/>
         <button class="btn-primary" onclick="calcPregnancyWeek()">Calculate Week</button>
       </div>
       <div id="pregnancyResult"></div>
@@ -162,9 +165,9 @@
         <h3 style="margin-bottom:1rem">📅 Log Appointment</h3>
         <div style="display:flex;gap:.8rem;flex-wrap:wrap">
           <input type="text" id="apptName" placeholder="Appointment (e.g. Anatomy Scan)"
-            style="flex:1;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;min-width:180px"/>
+            style="flex:1;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;font-family:inherit;min-width:180px"/>
           <input type="date" id="apptDate"
-            style="background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px"/>
+            style="background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px"/>
           <button class="btn-primary" onclick="addAppointment()">➕ Add</button>
         </div>
         <div id="apptList" style="margin-top:1rem"></div>
@@ -179,21 +182,21 @@
       <p class="muted" style="margin-bottom:1.5rem">Supporting you through perimenopause and menopause — hot flashes, sleep changes, mood, and beyond.</p>
       <div class="grid-2">
         <div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
             <h3 style="color:var(--pri);margin-bottom:.7rem">🌡️ Hot Flashes</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Sudden warmth spreading from chest to face is a vasomotor symptom. <strong>What helps:</strong> cool water, layered clothing, paced breathing (slow exhale). Tracking triggers (spicy food, caffeine, stress) helps predict them.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--acc);margin-bottom:.7rem">😴 Sleep Changes</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#2E7D5A;margin-bottom:.7rem">😴 Sleep Changes</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Night sweats and insomnia are common. Keep your room cool (18–20°C), avoid screens 1 hour before bed, and try magnesium-rich foods. Log sleep quality to share with your doctor.</p>
           </div>
         </div>
         <div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
-            <h3 style="color:var(--pink);margin-bottom:.7rem">😔 Mood &amp; Brain Fog</h3>
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+            <h3 style="color:#7A4B1A;margin-bottom:.7rem">😔 Mood &amp; Brain Fog</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Estrogen withdrawal affects serotonin. Mood swings, irritability, and forgetfulness are real and valid. <a href="chat.html" style="color:var(--pri)">Talk to Aura AI →</a> or use the breathing exercises in Resources.</p>
           </div>
-          <div style="background:var(--card2);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
+          <div style="background:var(--lav-fill);border-radius:14px;padding:1.3rem;margin-bottom:1rem">
             <h3 style="color:var(--pri);margin-bottom:.7rem">🩸 Cycle Changes</h3>
             <p style="font-size:.9rem;line-height:1.7;color:var(--muted)">Perimenopause can cause very irregular periods — more frequent, less frequent, or heavier. Keep logging your cycle. Any bleeding 12+ months after your last period should be discussed with your doctor.</p>
           </div>
@@ -224,13 +227,13 @@
       <div class="grid-2">
         <div>
           <h3 style="margin-bottom:.8rem">📸 Add Progress Entry</h3>
-          <select id="skinCategory" style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit">
+          <select id="skinCategory" style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;margin-bottom:.8rem;font-family:inherit">
             <option value="skin">🧴 Skin</option>
             <option value="hair">💇 Hair</option>
             <option value="nails">💅 Nails</option>
           </select>
           <textarea id="skinNote" placeholder="Describe the change, treatment used, or what you noticed today..."
-            style="width:100%;background:var(--card2);border:1px solid rgba(167,139,250,.2);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:90px;font-family:inherit;margin-bottom:.8rem"></textarea>
+            style="width:100%;background:var(--lav-fill);border:1px solid var(--lav-border);color:var(--text);padding:.8rem;border-radius:10px;resize:vertical;min-height:90px;font-family:inherit;margin-bottom:.8rem"></textarea>
           <label style="font-size:.9rem;color:var(--muted);display:block;margin-bottom:.4rem">Rate today's condition:</label>
           <div class="progress-rating" id="skinRating" style="margin-bottom:1rem">
             <button class="rating-dot" data-r="1" onclick="setRating(1)" title="Very poor">😞</button>
