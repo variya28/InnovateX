@@ -36,9 +36,9 @@
   --muted:  #6B7E96;       /* medium slate */
   --danger: #C0392B;       /* kept for crisis — used sparingly */
 
-  /* Gradients — pastels only */
-  --grad:  linear-gradient(135deg, #DCE8F5, #E3DBF0);
-  --grad2: linear-gradient(135deg, #0070C0, #5B9BD5);
+  /* Gradients */
+  --grad:  linear-gradient(135deg, #0070C0, #A491C7);  /* blue → soft purple, visible on light bg */
+  --grad2: linear-gradient(135deg, #0070C0, #5B9BD5);  /* blue → lighter blue for buttons */
 
   /* Utility */
   --shadow: 0 2px 16px rgba(36, 52, 77, .08);
